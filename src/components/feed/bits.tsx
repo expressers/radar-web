@@ -98,7 +98,13 @@ export function CoverImage({
       <img
         src={src}
         alt={alt}
+        loading="lazy"
+        decoding="async"
         className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+        onError={(event) => {
+          event.currentTarget.onerror = null
+          event.currentTarget.src = '/favicon.svg'
+        }}
       />
       <div
         className="pointer-events-none absolute inset-0 mix-blend-multiply"
@@ -109,4 +115,3 @@ export function CoverImage({
     </div>
   )
 }
-

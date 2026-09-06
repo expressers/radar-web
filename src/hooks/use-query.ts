@@ -22,6 +22,7 @@ export function useQuery<T>(
       const next = await gql<T>(query, parsed, token)
       setData(next)
     } catch (err) {
+      if (err instanceof DOMException && err.name === 'AbortError') return
       setError(err instanceof Error ? err.message : 'Algo correu mal.')
     } finally {
       setLoading(false)

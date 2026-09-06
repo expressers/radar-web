@@ -13,6 +13,7 @@ import { MePage } from '@/pages/me'
 import { LoginPage, RegisterPage } from '@/pages/auth'
 import { OrganizationPage } from '@/pages/organization'
 import { ExplorePage } from '@/pages/explore'
+import { NotFoundPage } from '@/pages/not-found'
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       { path: 'entrar', element: <LoginPage /> },
       { path: 'criar', element: <RegisterPage /> },
       { path: 'casas/:slug', element: <OrganizationPage /> },
+      { path: '*', element: <NotFoundPage /> },
     ],
   },
 ])

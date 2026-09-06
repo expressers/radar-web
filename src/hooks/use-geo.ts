@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { TALATONA } from '@/lib/theme'
 
 export type GeoState = {
@@ -13,7 +13,7 @@ export function useGeo() {
   const [state, setState] = useState<GeoState>({
     ...TALATONA,
     source: 'fallback',
-    pending: true,
+    pending: false,
     denied: false,
   })
 
@@ -50,10 +50,6 @@ export function useGeo() {
       { enableHighAccuracy: true, timeout: 8000, maximumAge: 60_000 },
     )
   }, [])
-
-  useEffect(() => {
-    locate()
-  }, [locate])
 
   return { ...state, locate }
 }

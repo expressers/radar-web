@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router'
-import { ArrowRight, LocateFixed } from 'lucide-react'
+import { ArrowRight, LocateFixed, MapPin, Sparkles } from 'lucide-react'
 import { ActivityCard } from '@/components/feed/activity-card'
 import { CategoryStory } from '@/components/feed/bits'
 import { PersonCard } from '@/components/feed/person-card'
@@ -64,6 +64,33 @@ export function HomePage() {
   return (
     <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="mx-auto w-full max-w-xl">
+        <section className="relative mb-7 overflow-hidden rounded-[2rem] bg-night px-5 py-6 text-cream shadow-xl sm:px-7 sm:py-8">
+          <div className="pointer-events-none absolute -right-12 -top-16 size-48 rounded-full bg-primary/30 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-20 left-1/3 size-44 rounded-full bg-pulse/20 blur-3xl" />
+          <div className="relative">
+            <div className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-cream/60">
+              <Sparkles className="size-4 text-gold" />
+              Radar para hoje
+            </div>
+            <h1 className="max-w-md font-display text-4xl leading-[0.98] tracking-tight sm:text-5xl">
+              O que fazemos hoje?
+            </h1>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-cream/70 sm:text-base">
+              Descobre sítios, planos e pessoas que combinam contigo. Sem perder tempo a procurar.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <Button variant="pulse" size="sm" onClick={geo.locate} disabled={geo.pending}>
+                <LocateFixed />
+                {geo.pending ? 'A localizar…' : 'Encontrar perto de mim'}
+              </Button>
+              <span className="flex items-center gap-1.5 text-xs text-cream/55">
+                <MapPin className="size-3.5" />
+                {geo.source === 'device' ? 'A tua localização' : 'A explorar Talatona'}
+              </span>
+            </div>
+          </div>
+        </section>
+
         {error && (
           <p className="mb-5 rounded-2xl bg-destructive/10 px-4 py-3 text-sm text-destructive">
             {error}
@@ -85,13 +112,23 @@ export function HomePage() {
           ))}
         </section>
 
-        <h1 className="mb-4 flex items-center gap-2 font-display text-2xl tracking-tight">
-          <span
-            className={`size-2 rounded-full ${connected ? 'bg-pulse animate-pulse' : 'bg-muted-foreground/40'}`}
-            aria-hidden
-          />
-          A acontecer agora
-        </h1>
+        <div className="mb-4 flex items-end justify-between gap-3">
+          <div>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              {geo.source === 'device' ? 'Perto de ti' : 'A cidade agora'}
+            </p>
+            <h2 className="flex items-center gap-2 font-display text-2xl tracking-tight">
+              <span
+                className={`size-2 rounded-full ${connected ? 'bg-pulse animate-pulse' : 'bg-muted-foreground/40'}`}
+                aria-hidden
+              />
+              Planos para sair
+            </h2>
+          </div>
+          <Link to="/perto" className="inline-flex items-center gap-1 text-sm font-medium text-primary">
+            Ver tudo <ArrowRight className="size-4" />
+          </Link>
+        </div>
 
         {nearLocals.length > 0 && (
           <Link to="/perto" className="mb-5 block lg:hidden">

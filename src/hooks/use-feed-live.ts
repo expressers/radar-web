@@ -14,8 +14,11 @@ export function useFeedLive(onItem: (item: FeedItem) => void) {
     try {
       client = createClient({
         url: wsUrl(),
-        retryAttempts: Infinity,
-        shouldRetry: () => true,
+        retryAttempts: 5,
+        retryWait: async (retries) => {
+          await new Promise((resolve) => setTimeout(resolve, Math.min(1000 * 2 ** retries, 15_000)))
+        },
+        shouldRetry: () => navigator.onLine,
         on: {
           connected: () => setConnected(true),
           closed: () => setConnected(false),

@@ -29,6 +29,7 @@ export async function gql<T>(
   query: string,
   variables?: Record<string, unknown>,
   token?: string | null,
+  signal?: AbortSignal,
 ): Promise<T> {
   const response = await fetch(apiUrl(), {
     method: 'POST',
@@ -36,6 +37,7 @@ export async function gql<T>(
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
+    signal,
     body: JSON.stringify({ query, variables }),
   })
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router'
-import { LocateFixed } from 'lucide-react'
+import { LocateFixed, List, Map as MapIcon } from 'lucide-react'
 import { CityMap } from '@/components/map/city-map'
 import { EventCard } from '@/components/feed/event-card'
 import { LocalCard } from '@/components/feed/local-card'
@@ -21,6 +21,7 @@ export function NearbyPage() {
   const [params, setParams] = useSearchParams()
   const cat = params.get('cat')
   const [radiusKm, setRadiusKm] = useState(8)
+  const [view, setView] = useState<'list' | 'map'>('list')
 
   const { data, loading, error } = useQuery<{
     nearby: NearbyResult
@@ -64,6 +65,26 @@ export function NearbyPage() {
             {r} km
           </Button>
         ))}
+        <div className="ml-auto flex rounded-full border border-border bg-card p-1">
+          <button
+            type="button"
+            aria-label="Ver lista"
+            aria-pressed={view === 'list'}
+            onClick={() => setView('list')}
+            className={`rounded-full p-2 ${view === 'list' ? 'bg-night text-cream' : 'text-muted-foreground'}`}
+          >
+            <List className="size-4" />
+          </button>
+          <button
+            type="button"
+            aria-label="Ver mapa"
+            aria-pressed={view === 'map'}
+            onClick={() => setView('map')}
+            className={`rounded-full p-2 ${view === 'map' ? 'bg-night text-cream' : 'text-muted-foreground'}`}
+          >
+            <MapIcon className="size-4" />
+          </button>
+        </div>
       </div>
 
       <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
@@ -87,24 +108,26 @@ export function NearbyPage() {
         ))}
       </div>
 
-      <CityMap
-        className="mt-6 h-[420px] w-full"
-        radiusKm={radiusKm}
-        origin={{
-          latitude: geo.latitude,
-          longitude: geo.longitude,
-          label: geo.source === 'device' ? 'Estás aqui' : 'Talatona (referência)',
-        }}
-        pins={locals.map((row) => ({
-          id: row.local.id,
-          name: row.local.name,
-          latitude: row.local.latitude,
-          longitude: row.local.longitude,
-          href: `/sitios/${row.local.slug}`,
-          color: primaryCategory(row.local.categories).hex,
-          subtitle: formatDistance(row.distanceMeters),
-        }))}
-      />
+      {view === 'map' && (
+        <CityMap
+          className="mt-6 h-[360px] w-full sm:h-[420px]"
+          radiusKm={radiusKm}
+          origin={{
+            latitude: geo.latitude,
+            longitude: geo.longitude,
+            label: geo.source === 'device' ? 'Estás aqui' : 'Talatona (referência)',
+          }}
+          pins={locals.map((row) => ({
+            id: row.local.id,
+            name: row.local.name,
+            latitude: row.local.latitude,
+            longitude: row.local.longitude,
+            href: `/sitios/${row.local.slug}`,
+            color: primaryCategory(row.local.categories).hex,
+            subtitle: formatDistance(row.distanceMeters),
+          }))}
+        />
+      )}
 
       {error && (
         <p className="mt-4 rounded-2xl bg-destructive/10 px-4 py-3 text-sm text-destructive">
