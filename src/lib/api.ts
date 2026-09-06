@@ -1,7 +1,9 @@
-const DEFAULT_URL = 'http://localhost:4000/graphql'
+const DEFAULT_URL = 'https://radar-0t6d.onrender.com/graphql'
 
 export function apiUrl() {
-  return import.meta.env.VITE_API_URL ?? DEFAULT_URL
+  const configured = import.meta.env.VITE_API_URL?.trim()
+  if (!configured) return DEFAULT_URL
+  return configured.endsWith('/graphql') ? configured : `${configured.replace(/\/$/, '')}/graphql`
 }
 
 export function wsUrl() {

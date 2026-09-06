@@ -14,7 +14,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/graphql': {
-        target: 'http://localhost:4000',
+        target: 'https://radar-0t6d.onrender.com',
         changeOrigin: true,
       },
     },
