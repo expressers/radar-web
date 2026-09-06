@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router'
+import { createHashRouter, RouterProvider } from 'react-router'
 import { AuthProvider } from '@/hooks/use-auth'
 import { Shell } from '@/components/layout/shell'
 import { HomePage } from '@/pages/home'
@@ -15,7 +15,7 @@ import { OrganizationPage } from '@/pages/organization'
 import { ExplorePage } from '@/pages/explore'
 import { NotFoundPage } from '@/pages/not-found'
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: <Shell />,
