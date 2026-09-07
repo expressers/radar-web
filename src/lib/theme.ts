@@ -79,45 +79,10 @@ export function primaryCategory(categories?: Category[] | null): CategoryTheme {
   return themeFor(categories?.[0]?.slug)
 }
 
-const COVERS: Record<string, string> = {
-  karaoke:
-    'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1600&q=80',
-  'vida-nocturna':
-    'https://images.unsplash.com/photo-1566737236500-c8ac43014a67?auto=format&fit=crop&w=1600&q=80',
-  musica:
-    'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80',
-  gastronomia:
-    'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80',
-  cinema:
-    'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1600&q=80',
-  arte: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1600&q=80',
-}
-
-const SLUG_COVERS: Record<string, string> = {
-  'karaoke-talatona':
-    'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1600&q=80',
-  'mare-alta':
-    'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1600&q=80',
-  'cine-marginal':
-    'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1600&q=80',
-  'karaoke-night':
-    'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?auto=format&fit=crop&w=1600&q=80',
-  'jantar-sexta-ilha':
-    'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80',
-  'karaoke-luanda-fim-de-semana':
-    'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1600&q=80',
-}
-
 export function coverOf(opts: {
   coverUrl?: string | null
   slug?: string
   categories?: Category[] | null
-}): string {
-  if (opts.coverUrl) return opts.coverUrl
-  if (opts.slug && SLUG_COVERS[opts.slug]) return SLUG_COVERS[opts.slug]
-  const slug = opts.categories?.[0]?.slug
-  if (slug && COVERS[slug]) return COVERS[slug]
-  return 'https://images.unsplash.com/photo-1514565131-fce0801d7090?auto=format&fit=crop&w=1600&q=80'
+}): string | null {
+  return opts.coverUrl ?? null
 }
-
-export const TALATONA = { latitude: -8.916, longitude: 13.185 }

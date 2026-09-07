@@ -1,18 +1,17 @@
 import { useCallback, useState } from 'react'
-import { TALATONA } from '@/lib/theme'
-
 export type GeoState = {
-  latitude: number
-  longitude: number
-  source: 'device' | 'fallback'
+  latitude: number | null
+  longitude: number | null
+  source: 'device' | 'none'
   pending: boolean
   denied: boolean
 }
 
 export function useGeo() {
   const [state, setState] = useState<GeoState>({
-    ...TALATONA,
-    source: 'fallback',
+    latitude: null,
+    longitude: null,
+    source: 'none',
     pending: false,
     denied: false,
   })
@@ -20,8 +19,9 @@ export function useGeo() {
   const locate = useCallback(() => {
     if (!navigator.geolocation) {
       setState({
-        ...TALATONA,
-        source: 'fallback',
+        latitude: null,
+        longitude: null,
+        source: 'none',
         pending: false,
         denied: true,
       })
@@ -41,8 +41,9 @@ export function useGeo() {
       },
       () => {
         setState({
-          ...TALATONA,
-          source: 'fallback',
+          latitude: null,
+          longitude: null,
+          source: 'none',
           pending: false,
           denied: true,
         })

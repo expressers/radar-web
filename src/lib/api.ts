@@ -1,8 +1,8 @@
-const DEFAULT_URL = 'https://radar-0t6d.onrender.com/graphql'
+import { appConfig } from '@/lib/config'
 
 export function apiUrl() {
   const configured = import.meta.env.VITE_API_URL?.trim()
-  if (!configured) return DEFAULT_URL
+  if (!configured) return appConfig.apiUrl
   return configured.endsWith('/graphql') ? configured : `${configured.replace(/\/$/, '')}/graphql`
 }
 

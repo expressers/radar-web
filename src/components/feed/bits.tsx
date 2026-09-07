@@ -88,24 +88,33 @@ export function CoverImage({
   className,
   accent,
 }: {
-  src: string
+  src: string | null
   alt: string
   className?: string
   accent?: string
 }) {
   return (
     <div className={cn('relative overflow-hidden', className)}>
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
-        onError={(event) => {
-          event.currentTarget.onerror = null
-          event.currentTarget.src = '/favicon.svg'
-        }}
-      />
+      {src ? (
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+          onError={(event) => {
+            event.currentTarget.onerror = null
+            event.currentTarget.src = '/favicon.svg'
+          }}
+        />
+      ) : (
+        <div
+          className="size-full"
+          style={{
+            background: `radial-gradient(circle at 20% 20%, ${accent ?? '#FF5C4D'}, transparent 45%), linear-gradient(135deg, #24151a, #5a2931)`,
+          }}
+        />
+      )}
       <div
         className="pointer-events-none absolute inset-0 mix-blend-multiply"
         style={{

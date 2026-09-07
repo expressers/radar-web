@@ -25,11 +25,12 @@ export function HomePage() {
   const geo = useGeo()
   const { user } = useAuth()
   const { data, loading, error } = useQuery<FeedData>(Q_FEED, { limit: 30 })
+  const hasLocation = geo.latitude != null && geo.longitude != null
   const nearby = useQuery<{ nearby: NearbyResult }>(Q_NEARBY, {
     latitude: geo.latitude,
     longitude: geo.longitude,
     radiusKm: 12,
-  })
+  }, { skip: !hasLocation })
 
   const [live, setLive] = useState<FeedItem[]>([])
   const [freshIds, setFreshIds] = useState<Set<string>>(() => new Set())
@@ -85,7 +86,7 @@ export function HomePage() {
               </Button>
               <span className="flex items-center gap-1.5 text-xs text-cream/55">
                 <MapPin className="size-3.5" />
-                {geo.source === 'device' ? 'A tua localização' : 'A explorar Talatona'}
+                {geo.source === 'device' ? 'A tua localização' : 'Localização ainda desligada'}
               </span>
             </div>
           </div>
@@ -115,7 +116,7 @@ export function HomePage() {
         <div className="mb-4 flex items-end justify-between gap-3">
           <div>
             <p className="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              {geo.source === 'device' ? 'Perto de ti' : 'A cidade agora'}
+              {geo.source === 'device' ? 'Perto de ti' : 'Descoberta local'}
             </p>
             <h2 className="flex items-center gap-2 font-display text-2xl tracking-tight">
               <span
@@ -130,14 +131,14 @@ export function HomePage() {
           </Link>
         </div>
 
-        {nearLocals.length > 0 && (
+        {hasLocation && nearLocals.length > 0 && (
           <Link to="/perto" className="mb-5 block lg:hidden">
             <CityMap
               className="h-[180px] w-full"
               origin={{
-                latitude: geo.latitude,
-                longitude: geo.longitude,
-                label: geo.source === 'device' ? 'Estás aqui' : 'Talatona',
+                latitude: geo.latitude ?? 0,
+                longitude: geo.longitude ?? 0,
+                label: 'Estás aqui',
               }}
               pins={nearLocals.slice(0, 6).map((row) => ({
                 id: row.local.id,
@@ -196,21 +197,21 @@ export function HomePage() {
                 Mapa
               </Link>
             </div>
-            {geo.source === 'fallback' && !geo.pending && (
+                {geo.source === 'none' && !geo.pending && (
               <p className="mb-3 text-xs text-muted-foreground">
-                Referência em Talatona.{' '}
+                Queres ver o que está perto?{' '}
                 <button type="button" className="text-primary underline" onClick={geo.locate}>
                   Usa a tua localização
                 </button>
               </p>
             )}
-            {nearLocals.length > 0 && (
+            {hasLocation && nearLocals.length > 0 && (
               <CityMap
                 className="mb-3 h-[220px] w-full"
                 origin={{
-                  latitude: geo.latitude,
-                  longitude: geo.longitude,
-                  label: geo.source === 'device' ? 'Estás aqui' : 'Talatona',
+                  latitude: geo.latitude ?? 0,
+                  longitude: geo.longitude ?? 0,
+                  label: 'Estás aqui',
                 }}
                 pins={nearLocals.slice(0, 6).map((row) => ({
                   id: row.local.id,

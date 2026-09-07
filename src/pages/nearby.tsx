@@ -22,6 +22,7 @@ export function NearbyPage() {
   const cat = params.get('cat')
   const [radiusKm, setRadiusKm] = useState(8)
   const [view, setView] = useState<'list' | 'map'>('list')
+  const hasLocation = geo.latitude != null && geo.longitude != null
 
   const { data, loading, error } = useQuery<{
     nearby: NearbyResult
@@ -31,7 +32,7 @@ export function NearbyPage() {
     longitude: geo.longitude,
     radiusKm,
     categorySlug: cat || undefined,
-  })
+  }, { skip: !hasLocation })
 
   const locals = data?.nearby.locals ?? []
   const events = data?.nearby.events ?? []
@@ -47,7 +48,7 @@ export function NearbyPage() {
       <p className="mt-2 max-w-xl text-muted-foreground">
         {geo.source === 'device'
           ? 'Com base na tua posição. Distâncias reais, sítios reais.'
-          : 'Ainda não temos a tua posição — estamos a olhar para Talatona, o centro do catálogo de exemplo.'}
+          : 'Ativa a localização para encontrares planos e sítios perto de ti.'}
       </p>
 
       <div className="mt-5 flex flex-wrap items-center gap-2">
@@ -108,14 +109,25 @@ export function NearbyPage() {
         ))}
       </div>
 
-      {view === 'map' && (
+      {!hasLocation ? (
+        <div className="mt-6 rounded-[1.75rem] border border-dashed border-border bg-card p-7 text-center">
+          <LocateFixed className="mx-auto size-8 text-primary" />
+          <h2 className="mt-3 font-display text-2xl">Descobre o que está perto</h2>
+          <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
+            Usamos a tua localização apenas para ordenar resultados por proximidade.
+          </p>
+          <Button variant="pulse" className="mt-5" onClick={geo.locate}>
+            <LocateFixed /> Permitir localização
+          </Button>
+        </div>
+      ) : view === 'map' ? (
         <CityMap
           className="mt-6 h-[360px] w-full sm:h-[420px]"
           radiusKm={radiusKm}
           origin={{
-            latitude: geo.latitude,
-            longitude: geo.longitude,
-            label: geo.source === 'device' ? 'Estás aqui' : 'Talatona (referência)',
+            latitude: geo.latitude ?? 0,
+            longitude: geo.longitude ?? 0,
+            label: 'Estás aqui',
           }}
           pins={locals.map((row) => ({
             id: row.local.id,
@@ -127,7 +139,7 @@ export function NearbyPage() {
             subtitle: formatDistance(row.distanceMeters),
           }))}
         />
-      )}
+      ) : null}
 
       {error && (
         <p className="mt-4 rounded-2xl bg-destructive/10 px-4 py-3 text-sm text-destructive">

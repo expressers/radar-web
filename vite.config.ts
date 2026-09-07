@@ -4,6 +4,9 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+const apiTarget =
+  process.env.VITE_API_URL?.trim().replace(/\/graphql\/?$/, '') || 'http://localhost:4000'
+
 export default defineConfig({
   plugins: [
     react(),
@@ -41,7 +44,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/graphql': {
-        target: 'https://radar-0t6d.onrender.com',
+        target: apiTarget,
         changeOrigin: true,
       },
     },
