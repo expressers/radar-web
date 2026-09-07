@@ -38,6 +38,9 @@ export function LoginPage() {
       <form onSubmit={onSubmit} className="flex flex-col justify-center gap-4 bg-card p-8">
         <Mark />
         <h1 className="font-display text-3xl">Bem-vindo de volta</h1>
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          Guarda os teus sítios favoritos, acompanha o que acontece e combina o próximo plano.
+        </p>
         <div className="space-y-1">
           <Label htmlFor="id">Email ou username</Label>
           <Input
